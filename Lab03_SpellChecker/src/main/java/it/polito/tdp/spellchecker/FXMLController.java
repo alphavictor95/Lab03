@@ -1,25 +1,97 @@
-/**
- * Sample Skeleton for 'Scene.fxml' Controller Class
- */
-
 package it.polito.tdp.spellchecker;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+
+
+
+import it.polito.tdp.spellchecker.model.Dictionary;
+import it.polito.tdp.spellchecker.model.RichWord;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
 public class FXMLController {
 
-    @FXML // ResourceBundle that was given to the FXMLLoader
+	private Dictionary model;
+    @FXML
     private ResourceBundle resources;
 
-    @FXML // URL location of the FXML file that was given to the FXMLLoader
+    @FXML
     private URL location;
 
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    @FXML
+    private ComboBox<String> boxLingua;
+
+    @FXML
+    private TextArea txtInserita;
+
+    @FXML
+    private Button btnCheck;
+
+    @FXML
+    private TextArea txtWrong;
+
+    @FXML
+    private Label lblError;
+
+    @FXML
+    private Button btnClear;
+
+    @FXML
+    private Label lblTime;
+
+    @FXML
+    void doClearText(ActionEvent event) {
+
+    	txtInserita.clear();
+    	txtWrong.clear();
+    }
+
+    @FXML
+    void doSpellCheck(ActionEvent event) {
+
+    	int contatoreerrori=0;
+    	
+    	String lingua = boxLingua.getValue();
+    		model.loadDictionary(lingua);
+    		String inserimento=txtInserita.getText();
+    		List<RichWord> sct=model.spellCheckText(model.creaList(inserimento.toLowerCase()));
+    		 long startTime = System.nanoTime();
+    		 // ... the code being measured ...
+    		
+    		for(RichWord r : sct) {
+    			if(r.getStato()==false) {
+    				txtWrong.appendText(r.getWord()+" ");
+    				
+					contatoreerrori++;
+    			}
+    		}
+    		long elapsedNanos = System.nanoTime() - startTime;
+    		lblError.setText("The text contains: "+contatoreerrori+" errors ");
+    		lblTime.setText("Spell Check completed in: "+elapsedNanos+" seconds");
+    	
+    	
+    }
+
+    @FXML
     void initialize() {
+        assert boxLingua != null : "fx:id=\"boxLingua\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtInserita != null : "fx:id=\"txtInserita\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnCheck != null : "fx:id=\"btnCheck\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtWrong != null : "fx:id=\"txtWrong\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert lblError != null : "fx:id=\"lblError\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnClear != null : "fx:id=\"btnClear\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert lblTime != null : "fx:id=\"lblTime\" was not injected: check your FXML file 'Scene.fxml'.";
 
     }
+    public void setModel(Dictionary model) {
+    	this.model=model;
+    	boxLingua.getItems().addAll("English","Italian");
+    }
 }
-
 
