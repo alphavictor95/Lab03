@@ -43,16 +43,7 @@ public class Dictionary {
 			}
 		}
 	}
-	public List<String>  creaList(String s) {
-		List<String> listWord = new ArrayList<>();
-		String s2 = s.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()\\[\\]\"]", "");
-		String[] sarray = s2.split(" ");
-		for(String i : sarray) {
-			listWord.add(i);
-		}
-		
-		return listWord;
-	}
+	
 	
 	public List<RichWord> spellCheckText(List<String> inputTextList){
 		List<RichWord> sct = new ArrayList<RichWord>();

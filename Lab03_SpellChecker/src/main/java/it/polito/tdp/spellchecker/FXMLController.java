@@ -1,6 +1,7 @@
 package it.polito.tdp.spellchecker;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -50,17 +51,29 @@ public class FXMLController {
 
     	txtInserita.clear();
     	txtWrong.clear();
+    	lblError.setText(null);
     }
 
     @FXML
     void doSpellCheck(ActionEvent event) {
+    	
+		
 
+    	
     	int contatoreerrori=0;
     	
     	String lingua = boxLingua.getValue();
     		model.loadDictionary(lingua);
     		String inserimento=txtInserita.getText();
-    		List<RichWord> sct=model.spellCheckText(model.creaList(inserimento.toLowerCase()));
+    		inserimento.replace("\n", "");
+    		
+    			List<String> listWord = new ArrayList<>();
+    			String s2 = inserimento.replaceAll("\n[.,\\/#!$%\\^&\\*;:{}=\\-_`~()\\[\\]\"]", "");
+    			String[] sarray = s2.split(" ");
+    			for(String i : sarray) {
+    				listWord.add(i);
+    		}
+    		List<RichWord> sct=model.spellCheckText(listWord);
     		 long startTime = System.nanoTime();
     		 // ... the code being measured ...
     		
@@ -73,9 +86,9 @@ public class FXMLController {
     		}
     		long elapsedNanos = System.nanoTime() - startTime;
     		lblError.setText("The text contains: "+contatoreerrori+" errors ");
-    		lblTime.setText("Spell Check completed in: "+elapsedNanos+" seconds");
+    		lblTime.setText("Spell Check completed in: "+elapsedNanos+" nanoseconds");
     	
-    	
+    		txtInserita.clear();
     }
 
     @FXML
